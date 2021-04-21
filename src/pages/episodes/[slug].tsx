@@ -1,13 +1,13 @@
-import { GetStaticProps, GetStaticPaths } from "next";
-
 import { format, parseISO } from "date-fns";
-import { api } from "../../services/api";
 import ptBR from "date-fns/locale/pt-BR";
+import Image from "next/image";
+import { GetStaticProps, GetStaticPaths } from "next";
+import Link from "next/Link";
+import { api } from "../../services/api";
 
 import { convertDurationToTimeString } from "../../utils/convertDurationToTimeString";
 
 import styles from "./episode.module.scss";
-import Image from "next/image";
 
 type Episode = {
   id: string;
@@ -29,9 +29,11 @@ export default function Episode({ episode }: EpisodeProps) {
   return (
     <div className={styles.episode}>
       <div className={styles.thumbnailContainer}>
-        <button>
-          <img src="/arrow-left.svg" alt="Voltar" />
-        </button>
+        <Link href="/">
+          <button>
+            <img src="/arrow-left.svg" alt="Voltar" />
+          </button>
+        </Link>
         <Image
           width={700}
           height={160}
@@ -39,19 +41,21 @@ export default function Episode({ episode }: EpisodeProps) {
           objectFit="cover"
         />
         <button type="button">
-            <img src="/play.svg" alt="Tocar episódio" />
+          <img src="/play.svg" alt="Tocar episódio" />
         </button>
       </div>
-    
-    <header>
+
+      <header>
         <h1>{episode.title}</h1>
         <span>{episode.members}</span>
         <span>{episode.publishedAt}</span>
         <span>{episode.durationAsString}</span>
-    </header>
+      </header>
 
-    <div className={styles.description} dangerouslySetInnerHTML={{ __html: episode.description}}/>      
-  
+      <div
+        className={styles.description}
+        dangerouslySetInnerHTML={{ __html: episode.description }}
+      />
     </div>
   );
 }
