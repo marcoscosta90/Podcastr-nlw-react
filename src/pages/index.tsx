@@ -5,13 +5,15 @@ import { format, parseISO } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
 import { api } from "../services/api";
 import { convertDurationToTimeString } from "../utils/convertDurationToTimeString";
+import { useContext } from "react";
+import { PlayerContext } from "../contexts/PlayerContext";
 
 import styles from "./home.module.scss";
 
 type Episode = {
   id: string;
   title: string;
-  thumbnail: string;  
+  thumbnail: string;
   members: string;
   duration: number;
   durationAsString: string;
@@ -25,6 +27,8 @@ type HomeProps = {
 };
 
 export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
+  const { play } = useContext(PlayerContext);
+
   return (
     <div className={styles.homepage}>
       <section className={styles.latestEpisodes}>
@@ -50,7 +54,7 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
                   <span>{episode.durationAsString}</span>
                 </div>
 
-                <button type="button">
+                <button type="button" onClick={() => play(episode)}>
                   <img src="/play-green.svg" alt="tocar episodio" />
                 </button>
               </li>
@@ -65,12 +69,12 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
         <table cellSpacing={0}>
           <thead>
             <tr>
-            <th></th>
-            <th>Podcast</th>
-            <th>Integrantes</th>
-            <th>Data</th>
-            <th>Duração</th>
-            <th></th>
+              <th></th>
+              <th>Podcast</th>
+              <th>Integrantes</th>
+              <th>Data</th>
+              <th>Duração</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -88,7 +92,7 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
                   </td>
                   <td>
                     <Link href={`/episodes/${episode.id}`}>
-                    <a >{episode.title}</a>
+                      <a>{episode.title}</a>
                     </Link>
                   </td>
                   <td>{episode.members}</td>
@@ -130,7 +134,7 @@ export const getStaticProps: GetStaticProps = async () => {
       duration: Number(episode.file.duration),
       durationAsString: convertDurationToTimeString(
         Number(episode.file.duration)
-      ),      
+      ),
       url: episode.file.url,
     };
   });
